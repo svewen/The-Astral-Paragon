@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
-        SpeedControl();
+        // SpeedControl();
         StateHandler();
 
         // handle drag
@@ -185,6 +185,7 @@ public class PlayerController : MonoBehaviour
             if (rb.velocity.magnitude == 0)
             {
                 state = MovementState.idle;
+                desiredMoveSpeed = walkSpeed;
             } 
             else
             {
@@ -271,7 +272,8 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
         // turn gravity off while on slope
-        rb.useGravity = !OnSlope();
+        // rb.useGravity = !OnSlope();
+        rb.useGravity = true;
     }
 
     private void SpeedControl()
