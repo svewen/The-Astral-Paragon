@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
     public bool hasDashed = false;
 
     private void Start()
-    {
+    { 
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviour
         // on slope
         if (OnSlope() && !exitingSlope)
         {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
 
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
