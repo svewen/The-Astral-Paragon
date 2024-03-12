@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class PlayerController : MonoBehaviour
     public float dashSpeedChangeFactor;
     public float maxYSpeed;
     public float groundDrag;
-    public float stamina;
+    public float stamina = 100;
 
     [Header("Jumping")]
     public float jumpForce;
@@ -73,7 +74,6 @@ public class PlayerController : MonoBehaviour
     }
 
     public bool dashing;
-    public bool hasDashed = false;
 
     private void Start()
     { 
@@ -102,15 +102,13 @@ public class PlayerController : MonoBehaviour
         else if (state == MovementState.air)
             rb.drag = 1;
         else
-            rb.drag = 0;
+            rb.drag = 0.5f;
 
-        // check if able to dash
-        if (hasDashed && state != MovementState.air)
-        {
-            hasDashed = false;
-        }
+        if (state == MovementState.sprinting)
+            stamina--;
+
     }
-
+    
     private void FixedUpdate()
     {
         MovePlayer();
@@ -158,12 +156,11 @@ public class PlayerController : MonoBehaviour
 
     private void StateHandler()
     {
-        if (dashing && !hasDashed)
+        if (dashing)
         {
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
             speedChangeFactor = dashSpeedChangeFactor;
-            hasDashed = true;
         }
         // Mode - Crouching
         else if (Input.GetKey(crouchKey) && state != MovementState.air)
