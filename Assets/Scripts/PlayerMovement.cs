@@ -251,11 +251,12 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer()
     {
         if (state == MovementState.dashing) return;
+
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on slope
-        if (OnSlope() && !exitingSlope)
+        if (!exitingSlope)
         {
             rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
 
@@ -279,23 +280,21 @@ public class PlayerController : MonoBehaviour
     private void SpeedControl()
     {
         // limiting speed on slope
-        if (OnSlope() && !exitingSlope)
-        {
-            if (rb.velocity.magnitude > moveSpeed)
-                rb.velocity = rb.velocity.normalized * moveSpeed;
-        }
+        //if (OnSlope() && !exitingSlope)
+        //{
+        //    if (rb.velocity.magnitude > moveSpeed)
+        //        rb.velocity = rb.velocity.normalized * moveSpeed;
+        //}
 
         // limiting speed on ground or in air
-        else
-        {
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-            // limit velocity if needed
-            if (flatVel.magnitude > moveSpeed)
-            {
-                Vector3 limitedVel = flatVel.normalized * moveSpeed;
-                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-            }
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        // limit velocity if needed
+        if (flatVel.magnitude > moveSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
 
         if (maxYSpeed != 0 && rb.velocity.y > maxYSpeed)
@@ -318,7 +317,8 @@ public class PlayerController : MonoBehaviour
         exitingSlope = false;
     }
 
-    private bool OnSlope()
+
+    /*private bool OnSlope()
     {
         if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
         {
@@ -328,7 +328,7 @@ public class PlayerController : MonoBehaviour
 
         return false;
     }
-
+    */
     private Vector3 GetSlopeMoveDirection()
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
